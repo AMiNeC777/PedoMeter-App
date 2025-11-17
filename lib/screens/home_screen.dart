@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pedo_metreapp/widgets/statcard.dart';
+import 'package:pedo_metreapp/screens/ble_pedometer_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen(this.name, {super.key});
@@ -32,6 +33,21 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BLEPedometerScreen(),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.bluetooth,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
           IconButton(
             onPressed: () {},
             icon: const Icon(
@@ -278,8 +294,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildBarChart() {
-    final Color barColor = Colors.brown[400]!;
-    final Color highlightedBarColor = Colors.orange[600]!;
+    final Color barColor = const Color.fromARGB(255, 99, 114, 141);
+    final Color highlightedBarColor = const Color.fromARGB(255, 177, 149, 219);
 
     return BarChart(
       BarChartData(
