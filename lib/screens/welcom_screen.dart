@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pedo_metreapp/screens/home_screen.dart';
 
 
 class WelcomeScreen extends StatelessWidget {
@@ -8,22 +9,46 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 23, 23, 40),
       body: SafeArea(
         child: Padding(
           // Use symmetric padding for consistent horizontal spacing
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            // This structure divides the screen into 3 parts:
-            // Header (top), Middle (runner/text), Footer (button)
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Stack(
             children: [
-              _buildHeader(),
-              const Spacer(flex: 1), // Pushes content apart
-              _buildMiddleContent(),
-              const Spacer(flex: 2), // More space below middle content
-              _buildFooter(),
-              const SizedBox(height: 16), // Bottom padding
-            ],
+              Image.asset(
+            'assets/images/Bg.png',
+            // Adjust height as needed for your asset
+            height: 700,
+            errorBuilder: (context, error, stackTrace) {
+              // Friendly fallback if the image is missing
+              return Container(
+                height: 300,
+                width: 250,
+                color: Colors.white.withOpacity(0.1),
+                child: const Center(
+                  child: Text(
+                    'Add "runner.png" to assets/images/',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white54),
+                  ),
+                ),
+              );
+            },
           ),
+              Column(
+              // This structure divides the screen into 3 parts:
+              // Header (top), Middle (runner/text), Footer (button)
+              children: [
+                _buildHeader(),
+                const Spacer(flex: 1), // Pushes content apart
+                _buildMiddleContent(),
+                const Spacer(flex: 2), // More space below middle content
+                _buildFooter(context),
+                const SizedBox(height: 16), // Bottom padding
+              ],
+            ),
+          ]),
         ),
       ),
     );
@@ -37,10 +62,11 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Note: The icons in the image are custom.
               // We're using standard Material icons as placeholders.
-              const Icon(Icons.wifi, color: Colors.white, size: 28),
+              const Icon(Icons.wifi, color: Colors.white, size: 40),
               const SizedBox(width: 12),
               Text(
                 "CIRCUIT RUN",
@@ -53,7 +79,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               // Using 'developer_board' as a stand-in for the CPU icon
-              const Icon(Icons.developer_board, color: Colors.white, size: 28),
+              const Icon(Icons.developer_board, color: Colors.white, size: 40),
             ],
           ),
           const SizedBox(height: 4),
@@ -75,30 +101,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget _buildMiddleContent() {
     return Column(
       children: [
-        // --- !!! IMPORTANT !!! ---
-        // This is where you load your custom runner graphic.
-        // Make sure 'assets/images/runner.png' exists in your project
-        // and is declared in pubspec.yaml.
-        Image.asset(
-          'assets/images/runner.png',
-          // Adjust height as needed for your asset
-          height: 300,
-          errorBuilder: (context, error, stackTrace) {
-            // Friendly fallback if the image is missing
-            return Container(
-              height: 300,
-              width: 250,
-              color: Colors.white.withOpacity(0.1),
-              child: const Center(
-                child: Text(
-                  'Add "runner.png" to assets/images/',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54),
-                ),
-              ),
-            );
-          },
-        ),
+        SizedBox(height: 380),
         const SizedBox(height: 24),
         Text(
           "UNLOCK YOUR POTENTIAL",
@@ -124,7 +127,7 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   // --- FOOTER WIDGET ---
-  Widget _buildFooter() {
+  Widget _buildFooter(context) {
     return Column(
       children: [
         // --- GRADIENT BUTTON ---
@@ -140,7 +143,8 @@ class WelcomeScreen extends StatelessWidget {
           ),
           child: ElevatedButton(
             onPressed: () {
-              // TODO: Add navigation logic
+              // Navigate to the next screen
+              Navigator.push(context , MaterialPageRoute(builder: (context) => HomeScreen('ghofrane')));
             },
             style: ElevatedButton.styleFrom(
               // Make the button transparent to show the container's gradient
@@ -170,30 +174,7 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 30),
-        // --- BOTTOM NAVIGATION ELEMENTS ---
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Empty widget to balance the 'X' button on the right
-            const SizedBox(width: 48),
-            // Home indicator
-            Container(
-              width: 130,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            // 'Skip' button
-            IconButton(
-              icon: Icon(Icons.close, color: Colors.white.withOpacity(0.7)),
-              onPressed: () {
-                // TODO: Add skip logic
-              },
-            ),
-          ],
-        ),
+ 
       ],
     );
   }
