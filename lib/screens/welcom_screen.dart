@@ -16,26 +16,36 @@ class WelcomeScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Stack(
             children: [
-              Image.asset(
-            'assets/images/Bg.png',
-            // Adjust height as needed for your asset
-            height: 700,
-            errorBuilder: (context, error, stackTrace) {
-              // Friendly fallback if the image is missing
-              return Container(
-                height: 300,
-                width: 250,
-                color: Colors.white.withOpacity(0.1),
-                child: const Center(
-                  child: Text(
-                    'Add "runner.png" to assets/images/',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white54),
-                  ),
+              Positioned(
+                top: 50,
+                right: 0,
+                left: 20,
+                child: Container(
+                  height: 600,
+                  child: Image.asset(
+                  "assets/images/Background.png",
+                              // Adjust height as needed for your asset
+                              height: 700,
+                              width: 700,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                  // Friendly fallback if the image is missing
+                  return Container(
+                    height: 300,
+                    width: 250,
+                    color: Colors.white.withOpacity(0.1),
+                    child: const Center(
+                      child: Text(
+                        'Add "BG3.png" to assets/images/',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white54),
+                      ),
+                    ),
+                  );
+                              },
+                            ),
                 ),
-              );
-            },
-          ),
+              ),
               Column(
               // This structure divides the screen into 3 parts:
               // Header (top), Middle (runner/text), Footer (button)

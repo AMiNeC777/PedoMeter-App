@@ -11,6 +11,7 @@ class BLEPedometerScreen extends StatefulWidget {
 }
 
 class _BLEPedometerScreenState extends State<BLEPedometerScreen> {
+  // Use singleton instance (factory/instance in service)
   final BLEPedometerService _bleService = BLEPedometerService();
   int _stepCount = 0;
   List<ScanResult> _scanResults = [];
@@ -20,11 +21,21 @@ class _BLEPedometerScreenState extends State<BLEPedometerScreen> {
   void initState() {
     super.initState();
     _checkBluetoothStatus();
+
+    // Keep local view in sync with global step count
+    _stepCount = _bleService.currentStepCount;
+    _bleService.stepCountStream.listen((count) {
+      if (mounted) {
+        setState(() {
+          _stepCount = count;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
-    _bleService.dispose();
+    // Do NOT dispose the BLE service here to preserve connection when leaving screen.
     super.dispose();
   }
 

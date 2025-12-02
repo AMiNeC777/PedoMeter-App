@@ -3,9 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class BLEPedometerService {
-  // UUIDs for Pico Pedometer
-  static const String pedometerServiceUuid = '180A'; // Example service UUID
-  static const String stepCountCharUuid = '2A3F'; // Example characteristic UUID
+  // Singleton setup
+  BLEPedometerService._privateConstructor();
+  static final BLEPedometerService instance = BLEPedometerService._privateConstructor();
+  factory BLEPedometerService() => instance;
+
+  // TODO: Replace these with the actual UUIDs from your Pico Pedometer
+  // Use the BLE Debug Screen to discover them
+  static const String pedometerServiceUuid = 'a1b2c3d4-0000-1111-2222-333333333333';
+  static const String stepCountCharUuid = 'a1b2c3d4-0001-1111-2222-333333333333';
   static const String deviceName = 'Pico Pedometer';
 
   late BluetoothDevice _connectedDevice;
@@ -21,9 +27,11 @@ class BLEPedometerService {
   
   bool _isScanning = false;
   bool _isConnected = false;
-  
+  int _currentStepCount = 0; // Global current steps
+
   bool get isScanning => _isScanning;
   bool get isConnected => _isConnected;
+  int get currentStepCount => _currentStepCount;
   BluetoothDevice? get connectedDevice => _isConnected ? _connectedDevice : null;
 
   /// Start scanning for BLE devices
@@ -170,6 +178,7 @@ class BLEPedometerService {
       final byteData = ByteData.view(Uint8List.fromList(data.sublist(0, 4)).buffer);
       final stepCount = byteData.getUint32(0, Endian.little);
       
+      _currentStepCount = stepCount; // update global value
       _stepCountController.add(stepCount);
     } catch (e) {
       print('Error processing step data: $e');
@@ -193,6 +202,7 @@ class BLEPedometerService {
 
   /// Cleanup resources
   void dispose() {
+    // Only call when app is terminating to fully clean resources.
     _stepCountController.close();
     _connectionStatusController.close();
     _scanStatusController.close();

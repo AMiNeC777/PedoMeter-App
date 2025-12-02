@@ -3,11 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pedo_metreapp/widgets/statcard.dart';
 import 'package:pedo_metreapp/screens/ble_pedometer_screen.dart';
+import 'package:pedo_metreapp/services/ble_pedometer_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen(this.name, {super.key});
 
   final String name;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _stepCount = 0;
+  final BLEPedometerService _bleService = BLEPedometerService();
+
+  @override
+  void initState() {
+    super.initState();
+    _stepCount = _bleService.currentStepCount;
+    _bleService.stepCountStream.listen((count) {
+      if (mounted) {
+        setState(() {
+          _stepCount = count;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +40,7 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              'PedoMetre',
+              'CercuitRun',
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -34,19 +56,13 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.bluetooth),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const BLEPedometerScreen(),
-                ),
+                MaterialPageRoute(builder: (_) =>  BLEPedometerScreen()),
               );
             },
-            icon: const Icon(
-              Icons.bluetooth,
-              color: Colors.white,
-              size: 28,
-            ),
           ),
           IconButton(
             onPressed: () {},
@@ -66,7 +82,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             // Greeting Text
             Text(
-              'Good work for today, $name''🔥',
+              'Good work for today, ${widget.name}''🔥',
               style: GoogleFonts.poppins(
                 color: Colors.grey[400],
                 fontSize: 16,
@@ -113,8 +129,8 @@ class HomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           gradient: const LinearGradient(
             colors: [
-              Color(0xFF5CACEB), // Blue
-              Color(0xFF4CAF50), // Green
+              Color.fromARGB(255, 195, 77, 250), // Blue
+              Color.fromARGB(255, 76, 157, 233), // Green
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -155,7 +171,8 @@ class HomeScreen extends StatelessWidget {
                   textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
-                      '8,451',
+                      // show dynamic step count
+                      '$_stepCount',
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -218,7 +235,7 @@ class HomeScreen extends StatelessWidget {
         Expanded(
           child: StatCard(
             icon: Icons.directions_run,
-            iconColor: Color(0xFFEF6C00), // Deep Orange
+            iconColor: Color.fromARGB(255, 142, 86, 255), // Deep Orange
             label: 'Your Distance',
             value: '10.24',
             unit: 'km',
@@ -250,7 +267,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.local_fire_department, color: Colors.orange[600]),
+              Icon(Icons.local_fire_department, color: const Color.fromARGB(255, 142, 86, 255)),
               const SizedBox(width: 8),
               Text(
                 'Calories Burnt',
